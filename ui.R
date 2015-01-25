@@ -6,54 +6,41 @@
 #
 
 library(shiny)
+library(markdown)
 
+data(mtcars)
+choices_list <- names(mtcars)[-1]
+names(choices_list) <- c("Number of cylinders",
+                        "Displacement",
+                        "Gross horsepower",
+                        "Rear axle ratio",
+                        "Weight",
+                        "1/4 mile time",
+                        "V/Straight",
+                        "Transmission",
+                        "Number of forward gears",
+                        "Number of carburetors")
 shinyUI(fluidPage(
 
   # Application title
-  titlePanel("Old Faithful Geyser Data"),
+  titlePanel("Miles per gallon peridiction"),
 
   # Sidebar with a slider input for number of bins
   sidebarLayout(
     sidebarPanel(
-      sliderInput("bins",
-                  "Number of bins:",
-                  min = 1,
-                  max = 50,
-                  value = 30),
-      selectInput("dataset", "Choose a dataset:", 
-                  choices = c("rock", "pressure", "cars")),
       
-      numericInput("obs", "Number of observations to view:", 10),
-      
-      # Simple integer interval
-      sliderInput("integer", "Integer:", 
-                  min=0, max=1000, value=500),
-      
-      # Decimal interval with step value
-      sliderInput("decimal", "Decimal:", 
-                  min = 0, max = 1, value = 0.5, step= 0.1),
-      
-      # Specification of range within an interval
-      sliderInput("range", "Range:",
-                  min = 1, max = 1000, value = c(200,500)),
-      
-      # Provide a custom currency format for value display, with basic animation
-      sliderInput("format", "Custom Format:", 
-                  min = 0, max = 10000, value = 0, step = 2500,
-                  format="$#,##0", locale="us", animate=TRUE),
-      
-      # Animation with custom interval (in ms) to control speed, plus looping
-      sliderInput("animation", "Looping Animation:", 1, 2000, 1, step = 10, 
-                  animate=animationOptions(interval=300, loop=T))
-      
+      checkboxGroupInput("predictors", label = h4("Features"), 
+                         choices = choices_list,
+                         selected = "cyl"),
+      actionButton("train", "Train Model")
     ),
-
-    # Show a plot of the generated distribution
+      
     mainPanel(
-      plotOutput("distPlot"),
-      verbatimTextOutput("summary"),
-      tableOutput("view"),
-      tableOutput("values")
+      tabsetPanel(
+        tabPanel("Plot", plotOutput("plot")), 
+        tabPanel("Summary", verbatimTextOutput("summary")), 
+        tabPanel("Document", includeMarkdown("README.md"))
+      )
     )
   )
 ))
