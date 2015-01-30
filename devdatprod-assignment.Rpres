@@ -1,0 +1,34 @@
+develop data product course assignment
+========================================================
+author: Lili Sun
+date: 25 Jan, 2015
+
+How it works?
+========================================================
+
+- Subset the mtcars dataset 
+- Fit a linear regression model 
+- Show model summary and plot
+
+
+Design for UI
+========================================================
+- sider panel includes a checkboxgroupInput 
+- main panel has 3 tabs: plot, summary and docs.
+
+Some Code
+========================================================
+
+```{r}
+dat <- mtcars[,c("mpg","cyl","wt")]
+model <- lm(mpg ~ ., data = dat)
+summary(model)
+```
+
+Some Plot
+========================================================
+
+```{r, echo=FALSE}
+par(mfrow=c(2,2))
+plot(model)
+```
